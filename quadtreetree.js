@@ -6,10 +6,12 @@ function quadtreetree(opts) {
   //   y: number,
   //   width: number, 
   //   height: number, 
-  //   quadtree: [a d3.geom.quadtree], 
-  //   rootSelection: [a D3 selection of a <g> under which to render the quads]
+  //   quadtree: a d3.geom.quadtree, 
+  //   rootSelector: a selector for a <g> under which to render the tree
+  //   boardSelector: a selector for an <svg> containing the tree
   // }
 
+var root = d3.select(opts.rootSelector);
 var idmaker = createIdmaker();
 
 var quadtreetree = {
@@ -29,7 +31,8 @@ function init() {
   quadtreetree.diagonalProjection = d3.svg.diagonal()
     .projection(function swapPointXAndY(d) { return [d.y, d.x]; });
 
-  //quadtreetree.camera = createCamera('#treeboard', '#treelayer', [0.25, 2]);
+  quadtreetree.camera = createCamera(opts.boardSelector, opts.rootSelector, 
+    [0.25, 2]);
 };
 
 function identity(d) {
@@ -64,7 +67,7 @@ quadtreetree.update = function update(rootQuadTreeNode) {
   nodes.forEach(function(d) { d.x = d.depth * 180; });
 
   // Update the nodes.
-  var node = opts.rootSelection.selectAll('g.node')
+  var node = root.selectAll('g.node')
     .data(nodes, identity)
     .attr('id', identity)
     .classed('new', false);
@@ -138,7 +141,7 @@ quadtreetree.update = function update(rootQuadTreeNode) {
 
 
   // Update the links.
-  var link = opts.rootSelection.selectAll('path.link')
+  var link = root.selectAll('path.link')
     .data(links, function(d) { return d.target.id; });
 
   // Enter any new links at the parent's previous position.

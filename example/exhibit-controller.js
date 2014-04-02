@@ -52,8 +52,8 @@ function exhibitController() {
     exhibit.displayedPoints());
 
   exhibit.quadtreetree = quadtreetree({
-    boardSelection: d3.select('#quadtreetree'),
-    rootSelection: d3.select('#treeroot')
+    boardSelector: '#quadtreetree',
+    rootSelector: '#treeroot'
   });
   exhibit.quadtreetree.update(exhibit.quadtree);
   // exhibit.quadmap = quadtreeMap({
