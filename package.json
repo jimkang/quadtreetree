@@ -1,0 +1,31 @@
+{
+  "name": "quadtreetree",
+  "version": "0.1.0",
+  "description": "Function that renders the internal tree within a D3 quadtree.",
+  "main": "quadtreetree.js",
+  "directories": {
+    "example": "example"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jimkang/quadtreetree.git"
+  },
+  "keywords": [
+    "d3",
+    "quadtree",
+    "tree",
+    "browser"
+  ],
+  "author": "Jim Kang",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jimkang/quadtreetree/issues"
+  },
+  "homepage": "https://github.com/jimkang/quadtreetree",
+  "dependencies": {
+    "one-at": "~0.1.0"
+  }
+}

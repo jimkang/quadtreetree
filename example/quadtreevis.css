@@ -1,0 +1,68 @@
+html {
+  /* Firefox needs this. */
+  height: 100%;
+}
+
+body {
+  font-family: Georgia, serif;
+  font-size: 18px;
+  color: #777;
+  background-color: hsl(0, 0%, 90%);
+  margin: 1em;
+  height: 100%;
+}
+
+svg {
+  font-family: "Helvetica Neue", sans-serif;
+}
+
+.map-node {
+  stroke: #ccc;
+  fill: hsla(0, 0%, 0%, 0.15);
+  shape-rendering: crispEdges;
+}
+
+#root-quad {
+  fill: hsl(98, 100%, 75%);
+}
+
+#quadroot rect.selected {
+  fill: hsl(55, 100%, 60%);
+}
+
+.dot {
+  shape-rendering: crispEdges;
+  cursor: pointer;
+  fill: white;
+}
+
+.dot.selected {
+  fill: rgb(204, 0, 255);
+}
+
+a {
+  font-weight: bold;
+  color: #555;
+  text-decoration: none;
+}
+
+.instructions {
+  background-color: hsla(60, 100%, 80%, 0.8);
+  font-family: "Helvetica Neue", sans-serif;
+  font-size: 20px;
+  padding: 0.5em;
+}
+
+.aside {
+  background-color: hsla(120, 10%, 80%, 0.8);
+  padding: 1em;
+}
+
+.explanation {
+  margin: 0.5em;
+}
+
+.details-box {
+  margin: 0.5em;
+}
+

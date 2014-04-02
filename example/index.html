@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<html>
+<head>
+  <title>Quadtree tree</title>
+  <link rel="stylesheet" type="text/css" href="quadtreevis.css" />
+</head>
+
+<body>
+
+<p class="explanation">The insides of a quadtree. Reload for a different random quadtree.</p>
+
+<svg id="quadtreetree" width="98%" height="75%">
+  <g id="treeroot"></g>
+</svg>
+
+<div>
+  <pre class="details-box">
+  </pre>
+</div>
+
+<script src="../lib/lodash.min.js"></script>
+<script src="../lib/d3.js"></script>
+<script src="../node_modules/one-at/one-at.js"></script>
+<script src="../idmaker.js"></script>
+<script src="example-quadtree.js"></script>
+<script src="../quadtreetree.js"></script>
+<script src="exhibit-controller.js"></script>
+
+</body>
+</html>
