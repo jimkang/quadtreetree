@@ -224,6 +224,7 @@ function wrap(text, getTextData, width) {
 function quadtreeToLayoutTree(quadtree) {
   var layoutNode = {
     id: 'tree_' + quadtree.label,
+    color: quadtree.color,
     children: [],
     x0: 0,
     y0: 0
@@ -235,7 +236,7 @@ function quadtreeToLayoutTree(quadtree) {
       child = {
         label: 'unset_' + idmaker.randomId(),
         // title: 'Not set',
-        // color: '#666',
+        color: 'purple',
         nodes: []
       };
     }

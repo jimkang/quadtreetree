@@ -40,6 +40,37 @@ svg {
   fill: rgb(204, 0, 255);
 }
 
+
+#quadtreetree {
+  background-color: #444;
+  border-radius: 4px;
+}
+
+#quadtreetree .node circle {
+  cursor: pointer;
+  fill-opacity: 0.8;
+  stroke: none;
+}
+
+#quadtreetree .new.node circle {
+}
+
+#quadtreetree .node text {
+  fill: #fff;
+  stroke: none;
+}
+
+#quadtreetree .link {
+  fill: none;
+  stroke: #aaa;
+  opacity: 0.7;
+}
+
+#quadtreetree .node tspan {
+  font-size: 16px;
+}
+
+
 a {
   font-weight: bold;
   color: #555;
