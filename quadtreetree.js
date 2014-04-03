@@ -2,10 +2,6 @@ function quadtreetree(opts) {
 // opts should contain:
 // 
 // {
-//   x: number,
-//   y: number,
-//   width: number, 
-//   height: number, 
 //   quadtree: a d3.geom.quadtree, 
 //   rootSelector: a selector for a <g> under which to render the tree
 //   boardSelector: a selector for an <svg> containing the tree
@@ -75,10 +71,11 @@ quadtreetree.update = function update(quadtree) {
   });
   var links = tree.links(nodes);
 
-  syncDOM(nodes, links, layoutTree);
+  syncDOMToNodes(nodes, links, layoutTree);
+  syncDOMToLinks(nodes, links, layoutTree);
 }
 
-function syncDOM(nodes, links, layoutTree) {
+function syncDOMToNodes(nodes, links, layoutTree) {
   var renderedNodes = root.selectAll('g.node')
     .data(nodes, identity)
     .attr('id', identity)
@@ -137,6 +134,16 @@ function syncDOM(nodes, links, layoutTree) {
     return d.color;
   });
 
+  // Mark the new nodes with the 'new' style.
+  entrants.classed('new', true);  
+  // Pan to one of the new nodes.
+  setTimeout(function pan() {
+    quadtreetree.camera.panToElement(entrants, 750);
+  },
+  750);  
+}
+
+function syncDOMToLinks(nodes, links, layoutTree) {
   // Update the links.
   var link = root.selectAll('path.link')
     .data(links, function(d) { return d.target.id; });
@@ -168,14 +175,6 @@ function syncDOM(nodes, links, layoutTree) {
     d.x0 = d.x;
     d.y0 = d.y;
   });
-
-  // Mark the new nodes with the 'new' style.
-  nodeEnter.classed('new', true);  
-  // Pan to one of the new nodes.
-  setTimeout(function pan() {
-    quadtreetree.camera.panToElement(nodeEnter, 750);
-  },
-  750);
 }
 
 // Based on https://gist.github.com/mbostock/7555321.
