@@ -79,13 +79,13 @@ quadtreetree.update = function update(quadtree) {
 }
 
 function syncDOM(nodes, links, layoutTree) {
-  var node = root.selectAll('g.node')
+  var renderedNodes = root.selectAll('g.node')
     .data(nodes, identity)
     .attr('id', identity)
     .classed('new', false);
 
   // Enter any new nodes at the parents' previous positions.
-  var nodeEnter = node.enter().append('g')
+  var entrants = renderedNodes.enter().append('g')
     .attr('class', 'node')
     .attr('transform', function() { 
       return 'translate(' + layoutTree.y0 + ',' + layoutTree.x0 + ')'; 
@@ -94,9 +94,9 @@ function syncDOM(nodes, links, layoutTree) {
     .on('click', function showCorrespondingEl(d) {
     });
 
-  nodeEnter.append('circle').attr('r', 1e-6);
+  entrants.append('circle').attr('r', 1e-6);
 
-  nodeEnter.append('text')
+  entrants.append('text')
     .attr('x', function(d) { 
       return d.children || d._children ? '0.3em' : '-0.3em'; 
     })
@@ -107,13 +107,13 @@ function syncDOM(nodes, links, layoutTree) {
     .style('fill-opacity', 1e-6);
 
   // Transition nodes to their new position.
-  var nodeUpdate = node.transition()
+  var updatees = renderedNodes.transition()
     .duration(quadtreetree.animationDuration)
     .attr('transform', function(d) { return 'translate(' + d.y + ',' + d.x + ')'; });
 
-  nodeUpdate.select('circle').attr('r', 12);
+  updatees.select('circle').attr('r', 12);
 
-  nodeUpdate.select('text')
+  updatees.select('text')
     .style('fill-opacity', function (d) { 
       return 1.0;
     }
@@ -122,21 +122,18 @@ function syncDOM(nodes, links, layoutTree) {
       quadtreetree.maxLabelWidth);
 
   // Transition exiting nodes to the parent's new position.
-  var nodeExit = node.exit().transition()
+  var exiters = renderedNodes.exit().transition()
     .duration(quadtreetree.animationDuration)
     .attr('transform', function() { 
       return 'translate(' + layoutTree.y + ',' + layoutTree.x + ')'; 
     })
     .remove();
 
-  nodeExit.select('circle')
-    .attr('r', 1e-6);
+  exiters.select('circle').attr('r', 1e-6);
+  exiters.select('text').style('fill-opacity', 1e-6);
 
-  nodeExit.select('text')
-    .style('fill-opacity', 1e-6);
-
-  var nodeCirclesToUpdate = node.selectAll('circle');
-  nodeCirclesToUpdate.attr('fill', function getColor(d) { 
+  var dotUpdatees = renderedNodes.selectAll('circle');
+  dotUpdatees.attr('fill', function getColor(d) { 
     return d.color;
   });
 
