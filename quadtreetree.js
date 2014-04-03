@@ -1,39 +1,48 @@
 function quadtreetree(opts) {
-  // opts should contain:
-  // 
-  // {
-  //   x: number,
-  //   y: number,
-  //   width: number, 
-  //   height: number, 
-  //   quadtree: a d3.geom.quadtree, 
-  //   rootSelector: a selector for a <g> under which to render the tree
-  //   boardSelector: a selector for an <svg> containing the tree
-  // }
-
-var root = d3.select(opts.rootSelector);
-var idmaker = createIdmaker();
+// opts should contain:
+// 
+// {
+//   x: number,
+//   y: number,
+//   width: number, 
+//   height: number, 
+//   quadtree: a d3.geom.quadtree, 
+//   rootSelector: a selector for a <g> under which to render the tree
+//   boardSelector: a selector for an <svg> containing the tree
+// }
 
 var quadtreetree = {
-  layout: null,
-  diagonalProjection: null,
   animationDuration: 750,
   maxLabelWidth: 50,
-  treeLayer: null,
-  camera: null
+  camera: null,
+  update: null
 };
 
-function init() {
-  // The tree layout generates a left-to-right tree by default, and we want a 
-  // top-to-bottom tree, so we flip x and y when we talk to it.
-  quadtreetree.treeLayout = d3.layout.tree();
-  quadtreetree.treeLayout.nodeSize([32, 32]);
-  quadtreetree.diagonalProjection = d3.svg.diagonal()
-    .projection(function swapPointXAndY(d) { return [d.y, d.x]; });
+var root = null;
+var idmaker = null;
+var tree = null;
+var diagonalProjection = null;
 
-  quadtreetree.camera = createCamera(opts.boardSelector, opts.rootSelector, 
-    [0.25, 2]);
-};
+function swapXAndYInPoint(d) { 
+  return [d.y, d.x]; 
+}
+
+// The tree layout generates a left-to-right tree by default, and we want a 
+// top-to-bottom tree, so we need to flip x and y when we talk to it.  
+function swapXAndYInLayoutTreeNode(d) {
+  var oldX = d.x;
+  var oldX0 = d.x0;
+  d.x = d.y;
+  d.x0 = d.y0;
+  d.y = oldX;
+  d.y0 = oldX0;
+  return d;
+}
+
+function normalizeXToFixedDepth(d) {
+  d.x = d.depth * 120;
+  return d;
+}
 
 function identity(d) {
   if (!d.id) {
@@ -42,36 +51,40 @@ function identity(d) {
   return d.id;
 }
 
-quadtreetree.update = function update(rootQuadTreeNode) {
-  var layoutTree = quadtreeToLayoutTree(rootQuadTreeNode);
-  if (!layoutTree || !layoutTree.children) {
-    return;
-  }
+(function init() {
+  root = d3.select(opts.rootSelector);
+  idmaker = createIdmaker();
+  // The tree layout generates a left-to-right tree by default, and we want a 
+  // top-to-bottom tree, so we flip x and y when we talk to it.
+  diagonalProjection = d3.svg.diagonal().projection(swapXAndYInPoint);
+
+  tree = d3.layout.tree();
+  tree.nodeSize([32, 32]);
+
+  quadtreetree.camera = createCamera(opts.boardSelector, opts.rootSelector, 
+    [0.2, 2]);
+}());
+
+quadtreetree.update = function update(quadtree) {
+  var layoutTree = quadtreeToLayoutTree(quadtree);
 
   // Compute the new tree layout.
-  var nodes = this.treeLayout.nodes(layoutTree).reverse();
-
-  nodes.forEach(function swapXAndY(d) {
-    var oldX = d.x;
-    var oldX0 = d.x0;
-    d.x = d.y;
-    d.x0 = d.y0;
-    d.y = oldX;
-    d.y0 = oldX0;
+  var nodes = tree.nodes(layoutTree).reverse();
+  nodes.forEach(function transformTreeNode(d) {
+    normalizeXToFixedDepth(swapXAndYInLayoutTreeNode(d));
   });
+  var links = tree.links(nodes);
 
-  var links = this.treeLayout.links(nodes);
+  syncDOM(nodes, links, layoutTree);
+}
 
-  // Normalize for fixed-depth.
-  nodes.forEach(function(d) { d.x = d.depth * 180; });
-
-  // Update the nodes.
+function syncDOM(nodes, links, layoutTree) {
   var node = root.selectAll('g.node')
     .data(nodes, identity)
     .attr('id', identity)
     .classed('new', false);
 
-  // Enter any new nodes at the parent's previous position.
+  // Enter any new nodes at the parents' previous positions.
   var nodeEnter = node.enter().append('g')
     .attr('class', 'node')
     .attr('transform', function() { 
@@ -79,18 +92,6 @@ quadtreetree.update = function update(rootQuadTreeNode) {
     })
     .attr('id', identity)
     .on('click', function showCorrespondingEl(d) {
-      var selector = '#quad_' + d.id;
-      if (!d.leaf) {
-        selector = '#quad_' + d.quadIndex;
-      }
-      var correspondant = d3.select(selector);
-      var oldFill = correspondant.attr('fill');
-      var t = 400;
-      for (var i = 0; i < 2; ++i) {
-        correspondant
-          .transition().delay(t * i).duration(t/2).attr('fill', '#fff')
-          .transition().delay(t * i + t/2).duration(t/2).attr('fill', oldFill);
-      }      
     });
 
   nodeEnter.append('circle').attr('r', 1e-6);
@@ -107,7 +108,7 @@ quadtreetree.update = function update(rootQuadTreeNode) {
 
   // Transition nodes to their new position.
   var nodeUpdate = node.transition()
-    .duration(this.animationDuration)
+    .duration(quadtreetree.animationDuration)
     .attr('transform', function(d) { return 'translate(' + d.y + ',' + d.x + ')'; });
 
   nodeUpdate.select('circle').attr('r', 12);
@@ -117,11 +118,12 @@ quadtreetree.update = function update(rootQuadTreeNode) {
       return 1.0;
     }
     .bind(this))
-    .call(wrap, function getTitle(d) { return d.title; }, this.maxLabelWidth);
+    .call(wrap, function getTitle(d) { return d.title; }, 
+      quadtreetree.maxLabelWidth);
 
   // Transition exiting nodes to the parent's new position.
   var nodeExit = node.exit().transition()
-    .duration(this.animationDuration)
+    .duration(quadtreetree.animationDuration)
     .attr('transform', function() { 
       return 'translate(' + layoutTree.y + ',' + layoutTree.x + ')'; 
     })
@@ -138,7 +140,6 @@ quadtreetree.update = function update(rootQuadTreeNode) {
     return d.color;
   });
 
-
   // Update the links.
   var link = root.selectAll('path.link')
     .data(links, function(d) { return d.target.id; });
@@ -148,19 +149,19 @@ quadtreetree.update = function update(rootQuadTreeNode) {
     .attr('class', 'link')
     .attr('d', function() {
       var o = {x: layoutTree.x0, y: layoutTree.y0};
-      return this.diagonalProjection({source: o, target: o});
+      return diagonalProjection({source: o, target: o});
     }
     .bind(this));
 
   // Transition links to their new position.
-  link.attr('d', this.diagonalProjection).attr('stroke-width', 3);
+  link.attr('d', diagonalProjection).attr('stroke-width', 3);
 
   // Transition exiting nodes to the parent's new position.
   link.exit().transition()
-    .duration(this.animationDuration)
+    .duration(quadtreetree.animationDuration)
     .attr('d', function getLinkData() {
       var o = {x: layoutTree.x, y: layoutTree.y};
-      return this.diagonalProjection({source: o, target: o});
+      return diagonalProjection({source: o, target: o});
     }
     .bind(this))
     .remove();
@@ -174,11 +175,10 @@ quadtreetree.update = function update(rootQuadTreeNode) {
   // Mark the new nodes with the 'new' style.
   nodeEnter.classed('new', true);  
   // Pan to one of the new nodes.
-  // setTimeout(function pan() {
-  //   this.camera.panToElement(nodeEnter, 750);
-  // }
-  // .bind(this),
-  // 750);
+  setTimeout(function pan() {
+    quadtreetree.camera.panToElement(nodeEnter, 750);
+  },
+  750);
 }
 
 // Based on https://gist.github.com/mbostock/7555321.
@@ -248,8 +248,6 @@ function quadtreeToLayoutTree(quadtree) {
 
   return layoutNode;
 }
-
-init();
 
 return quadtreetree;
 }
