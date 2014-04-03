@@ -27,7 +27,7 @@ function init() {
   // The tree layout generates a left-to-right tree by default, and we want a 
   // top-to-bottom tree, so we flip x and y when we talk to it.
   quadtreetree.treeLayout = d3.layout.tree();
-  quadtreetree.treeLayout.nodeSize([64, 32]);
+  quadtreetree.treeLayout.nodeSize([32, 32]);
   quadtreetree.diagonalProjection = d3.svg.diagonal()
     .projection(function swapPointXAndY(d) { return [d.y, d.x]; });
 
@@ -37,20 +37,19 @@ function init() {
 
 function identity(d) {
   if (!d.id) {
-    // debugger;
+    debugger;
   }
   return d.id;
 }
 
 quadtreetree.update = function update(rootQuadTreeNode) {
   var layoutTree = quadtreeToLayoutTree(rootQuadTreeNode);
-  if (!layoutTree || !layoutTree.children || layoutTree.children.length < 1) {
+  if (!layoutTree || !layoutTree.children) {
     return;
   }
+
   // Compute the new tree layout.
-  var nodes = this.treeLayout
-    .nodes(layoutTree)
-    .reverse();
+  var nodes = this.treeLayout.nodes(layoutTree).reverse();
 
   nodes.forEach(function swapXAndY(d) {
     var oldX = d.x;
@@ -239,7 +238,7 @@ function quadtreeToLayoutTree(quadtree) {
       child = {
         label: 'unset_' + idmaker.randomId(),
         // title: 'Not set',
-        color: 'purple',
+        color: 'white',
         nodes: []
       };
     }

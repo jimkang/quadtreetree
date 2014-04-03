@@ -27,12 +27,12 @@ function exampleQuadtree(width, height, points) {
 
     if (node.leaf) {
       node.label = 'point_' + node.point[0] + '_' + node.point[1];
-      node.color = colorDealer.pointColorForIndex(pointIndex);
+      node.color = 'red'; //colorDealer.pointColorForIndex(pointIndex);
       ++pointIndex;
     }
     else {
-      node.label = 'quad_' + x1 + '_' + y1;
-      node.color = colorDealer.quadColorForIndex(quadIndex);
+      node.label = ('quad_' + (x1 + x2)/2 + '_' + (y1 + y2)/2);
+      node.color = 'orange'; //colorDealer.quadColorForIndex(quadIndex);
       ++quadIndex;
     }
   });
