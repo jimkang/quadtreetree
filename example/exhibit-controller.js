@@ -51,11 +51,26 @@ function exhibitController() {
   exhibit.quadtree = exampleQuadtree(boardWidth, boardHeight, 
     exhibit.displayedPoints());
 
-  exhibit.quadtreetree = quadtreetree({
-    boardSelector: '#quadtreetree',
+  exhibit.quadtreetree = createQuadtreetree({
     rootSelector: '#treeroot'
   });
+
+  var camera = createCamera('#quadtreetree', '#treeroot', [0.2, 2]);
+
+  document.addEventListener('quadtreetree-dotsEntered', zoomToDots);
+
+  function zoomToDots(event) {
+    var dots = event.detail;
+    // Pan to one of the new dots.
+    setTimeout(function pan() {
+      camera.panToElement(dots, 750);
+    },
+    750);
+  }
+
   exhibit.quadtreetree.update(exhibit.quadtree);
+
+
   // exhibit.quadmap = quadtreeMap({
   //   x: exhibit.padding, 
   //   y: exhibit.padding, 
