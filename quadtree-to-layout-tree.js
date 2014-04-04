@@ -1,12 +1,13 @@
 function quadtreeToLayoutTree(quadtree) {
   var idmaker = createIdmaker();
-  
+
   var layoutNode = {
     id: 'tree_' + quadtree.label,
     color: quadtree.color,
     children: [],
     x0: 0,
-    y0: 0
+    y0: 0,
+    sourceNode: quadtree
   };
 
   for (var i = 0; i < quadtree.nodes.length; ++i) {

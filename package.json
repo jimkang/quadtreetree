@@ -27,6 +27,7 @@
   "homepage": "https://github.com/jimkang/quadtreetree",
   "dependencies": {
     "one-at": "0.1.0",
-    "svgcamera": "0.2.0"
+    "svgcamera": "0.2.0",
+    "quadtreenodereport": "0.1.1"
   }
 }
