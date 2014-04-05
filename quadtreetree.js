@@ -11,24 +11,8 @@ function createQuadtreetree(opts) {
     update: null
   };
 
-  function swapXAndYInPoint(d) { 
-    return [d.y, d.x]; 
-  }
-
-  // The tree layout generates a left-to-right tree by default, and we want a 
-  // top-to-bottom tree, so we need to flip x and y when we talk to it.  
-  function swapXAndYInLayoutTreeNode(d) {
-    var oldX = d.x;
-    var oldX0 = d.x0;
-    d.x = d.y;
-    d.x0 = d.y0;
-    d.y = oldX;
-    d.y0 = oldX0;
-    return d;
-  }
-
-  function normalizeXToFixedDepth(d) {
-    d.x = d.depth * 120;
+  function normalizeYToFixedDepth(d) {
+    d.y = d.depth * 400;
     return d;
   }
 
@@ -37,26 +21,20 @@ function createQuadtreetree(opts) {
     d.y0 = d.y;
   }
 
-  function compose(f, g) {
-    return function composedFunction(x) {
-      return g(f(x));
-    };
-  }
-
   function sendEvent(eventName, info) {
     var event = new CustomEvent(eventName, {detail: info});
     document.dispatchEvent(event);
   }
 
   var root = d3.select(opts.rootSelector);
-  var generateBezierPath = d3.svg.diagonal().projection(swapXAndYInPoint);
+  var generateBezierPath = d3.svg.diagonal();
   var tree = d3.layout.tree().nodeSize([32, 32]);
 
   quadtreetree.update = function update(quadtree) {
     var layoutTree = quadtreeToLayoutTree(quadtree);
     // Compute the positions for nodes and links.
     var nodes = tree.nodes(layoutTree).reverse();
-    nodes.forEach(compose(swapXAndYInLayoutTreeNode, normalizeXToFixedDepth));
+    nodes.forEach(normalizeYToFixedDepth);
     var links = tree.links(nodes);
 
     syncDOMToLinks(links);
@@ -130,4 +108,3 @@ function createQuadtreetree(opts) {
 
   return quadtreetree;
 }
-

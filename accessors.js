@@ -12,10 +12,10 @@ var accessors = ((function accessors() {
     },
     color: accessorFunctor('color'),
     translateToPosition0: function transform0(d) {
-      return 'translate(' + d.y0 + ',' + d.x0 + ')';
+      return 'translate(' + d.x0 + ',' + d.y0 + ')';
     },
     translateToPosition: function translateToPosition(d) {
-      return 'translate(' + d.y + ',' + d.x + ')';
+      return 'translate(' + d.x + ',' + d.y + ')';
     }
   };
 
