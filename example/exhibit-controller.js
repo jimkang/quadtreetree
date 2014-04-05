@@ -1,6 +1,8 @@
 function exhibitController() {
   var points = [];
-  var currentPointRange = [0, 200];
+  var currentPointRange = [0, 50];
+  var numberOfPointsToAddAtATime = 50;
+  var pointAddingInterval = 4000;
   var maxNumberOfPoints = 1000;
   var padding = 8;
   var detailsBox = d3.select('.details-box');
@@ -35,10 +37,9 @@ function exhibitController() {
 
   function pointsInRange() {
     return points.slice(currentPointRange[0], currentPointRange[1]);
-  };
+  }
 
   points = d3.range(maxNumberOfPoints).map(createPointRandomly);
-  
   quadtree = exampleQuadtree(boardWidth, boardHeight, pointsInRange());
 
   quadtreetree = createQuadtreetree({
@@ -76,15 +77,20 @@ function exhibitController() {
 
   quadtreetree.update(quadtree);
 
-  setTimeout(function addMoreNodes() {
-    currentPointRange[0] += 100;
-    currentPointRange[1] += 200;
+  var intervalKey = setInterval(function addMoreNodes() {
+    var newUpperBound = numberOfPointsToAddAtATime + currentPointRange[1];    
+    if (newUpperBound >= maxNumberOfPoints) {
+      clearInterval(intervalKey);
+      return;
+    }
 
+    currentPointRange[0] = currentPointRange[1];
+    currentPointRange[1] = newUpperBound;
     pointsInRange().forEach(quadtree.add);
     quadtree.setLabels();
     quadtreetree.update(quadtree);
   },
-  4000);
+  pointAddingInterval);
 
   return {
     quadtreetree: quadtreetree,
