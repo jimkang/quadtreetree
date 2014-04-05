@@ -49,7 +49,6 @@ function createQuadtreetree(opts) {
   }
 
   var root = d3.select(opts.rootSelector);
-  var idmaker = createIdmaker();
   var generateBezierPath = d3.svg.diagonal().projection(swapXAndYInPoint);
   var tree = d3.layout.tree().nodeSize([32, 32]);
 
