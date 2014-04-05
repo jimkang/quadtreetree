@@ -1,12 +1,9 @@
 function exhibitController() {
-  var exhibit = {
-    points: [],
-    displayedPointRange: [0, 100],
-    maxNumberOfPoints: 1000,
-    padding: 8,
-    detailsBox: d3.select('.details-box')
-  };
-
+  var points = [];
+  var currentPointRange = [0, 200];
+  var maxNumberOfPoints = 1000;
+  var padding = 8;
+  var detailsBox = d3.select('.details-box');
   var boardWidth = 0;
   var boardHeight = 0;
 
@@ -25,8 +22,8 @@ function exhibitController() {
       boardHeight = boardEl.parentElement.clientHeight;
     }
 
-    boardWidth -= (2 * exhibit.padding);
-    boardHeight -= (2 * exhibit.padding);
+    boardWidth -= (2 * padding);
+    boardHeight -= (2 * padding);
   })());
 
   function createPointRandomly() {
@@ -36,17 +33,15 @@ function exhibitController() {
     ];
   }
 
-  exhibit.displayedPoints = function displayedPoints() {
-    return exhibit.points.slice(
-      exhibit.displayedPointRange[0], exhibit.displayedPointRange[1]);
+  function pointsInRange() {
+    return points.slice(currentPointRange[0], currentPointRange[1]);
   };
 
-  exhibit.points = d3.range(exhibit.maxNumberOfPoints).map(createPointRandomly);
+  points = d3.range(maxNumberOfPoints).map(createPointRandomly);
   
-  exhibit.quadtree = exampleQuadtree(boardWidth, boardHeight, 
-    exhibit.displayedPoints());
+  quadtree = exampleQuadtree(boardWidth, boardHeight, pointsInRange());
 
-  exhibit.quadtreetree = createQuadtreetree({
+  quadtreetree = createQuadtreetree({
     rootSelector: '#treeroot'
   });
 
@@ -68,7 +63,7 @@ function exhibitController() {
   function reportSelectedNode(e) {
     var report = quadtreeNodeReport(e.detail.sourceNode);
     report = dropQuadtreetreeSpecifics(report);
-    exhibit.detailsBox.text(JSON.stringify(report, null, '  '));
+    detailsBox.text(JSON.stringify(report, null, '  '));
   }
 
   function dropQuadtreetreeSpecifics(node) {
@@ -79,9 +74,22 @@ function exhibitController() {
     return cleaned;
   }
 
-  exhibit.quadtreetree.update(exhibit.quadtree);
+  quadtreetree.update(quadtree);
 
-  return exhibit;
+  setTimeout(function addMoreNodes() {
+    currentPointRange[0] += 100;
+    currentPointRange[1] += 200;
+
+    pointsInRange().forEach(quadtree.add);
+    quadtree.setLabels();
+    quadtreetree.update(quadtree);
+  },
+  4000);
+
+  return {
+    quadtreetree: quadtreetree,
+    quadtree: quadtree
+  };
 }
 
 var theExhibit = exhibitController();
