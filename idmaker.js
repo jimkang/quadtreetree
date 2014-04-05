@@ -4,7 +4,7 @@ function createIdmaker() {
   }
 
   var idChars = 
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'.split('');
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
 
   // Creates a string of random characters of the length specified.
   function randomId(len) {

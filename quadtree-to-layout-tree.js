@@ -14,7 +14,7 @@ function quadtreeToLayoutTree(quadtree) {
     var child = quadtree.nodes[i];
     if (!child) {
       child = {
-        label: 'unset_' + idmaker.randomId(),
+        label: 'unset_' + idmaker.randomId(4),
         // title: 'Not set',
         color: 'white',
         nodes: []
