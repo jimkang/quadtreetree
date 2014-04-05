@@ -67,7 +67,16 @@ function exhibitController() {
 
   function reportSelectedNode(e) {
     var report = quadtreeNodeReport(e.detail.sourceNode);
-    exhibit.detailsBox.text(JSON.stringify(report, null, '  '));    
+    report = dropQuadtreetreeSpecifics(report);
+    exhibit.detailsBox.text(JSON.stringify(report, null, '  '));
+  }
+
+  function dropQuadtreetreeSpecifics(node) {
+    var cleaned = _.omit(node, 'label', 'color');
+    cleaned.nodes = cleaned.nodes.map(function cleanNode(child) {
+      return _.omit(child, 'label', 'color');
+    });
+    return cleaned;
   }
 
   exhibit.quadtreetree.update(exhibit.quadtree);

@@ -28,6 +28,7 @@
   "dependencies": {
     "one-at": "0.1.0",
     "svgcamera": "0.2.0",
-    "quadtreenodereport": "0.1.1"
+    "quadtreenodereport": "0.1.1",
+    "lodash": "2.4.1"
   }
 }
