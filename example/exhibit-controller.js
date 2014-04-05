@@ -46,7 +46,7 @@ function exhibitController() {
     rootSelector: '#treeroot'
   });
 
-  var camera = createCamera('#quadtreetree', '#treeroot', [0.2, 2]);
+  var camera = createCamera('#quadtreetree', '#treeroot', [0.025, 2]);
 
   document.addEventListener('quadtreetree-dotsEntered', zoomToDots);
 
