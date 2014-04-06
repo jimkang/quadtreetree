@@ -41,7 +41,7 @@ quadtreetree dispatches a couple of events if you want to listen for them.
 
 **quadtreetree-nodeSelected**
 
-This event is dispatched when the user selects a node. The event's `detail` object will be the selected [tree layout](https://github.com/mbostock/d3/wiki/Tree-Layout) node (not the uadtree](https://github.com/mbostock/d3/wiki/Quadtree-Geom) node). However, it will contain the _quadtree_ node in a property called `sourceNode`. Example:
+This event is dispatched when the user selects a node. The event's `detail` object will be the selected [tree layout](https://github.com/mbostock/d3/wiki/Tree-Layout) node (not the [quadtree](https://github.com/mbostock/d3/wiki/Quadtree-Geom) node). However, it will contain the _quadtree_ node in a property called `sourceNode`. Example:
 
     document.addEventListener('quadtreetree-nodeSelected', logSelectedNode);
 
