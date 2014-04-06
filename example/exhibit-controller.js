@@ -43,7 +43,8 @@ function exhibitController() {
   quadtree = exampleQuadtree(boardWidth, boardHeight, pointsInRange());
 
   quadtreetree = createQuadtreetree({
-    rootSelector: '#treeroot'
+    rootSelector: '#treeroot',
+    vertical: false
   });
 
   var camera = createCamera('#quadtreetree', '#treeroot', [0.025, 2]);

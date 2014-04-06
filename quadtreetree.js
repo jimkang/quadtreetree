@@ -8,8 +8,12 @@ function createQuadtreetree(opts) {
   var quadtreetree = {
     animationDuration: 750,
     maxLabelWidth: 50,
-    update: null
+    update: null,
   };
+
+  if (opts.vertical === undefined) {
+    opts.vertical = true;
+  }
 
   function normalizeYToFixedDepth(d) {
     d.y = d.depth * 400;
@@ -28,6 +32,11 @@ function createQuadtreetree(opts) {
 
   var root = d3.select(opts.rootSelector);
   var generateBezierPath = d3.svg.diagonal();
+  if (!opts.vertical) {
+    generateBezierPath.projection(function flipXAndY(d) {
+      return [d.y, d.x];
+    });
+  }
   var tree = d3.layout.tree().nodeSize([32, 32]);
 
   quadtreetree.update = function update(quadtree) {
@@ -50,7 +59,8 @@ function createQuadtreetree(opts) {
     // Enter any new nodes at their previous positions.
     var entrants = renderedNodes.enter().append('g').attr({
       class: 'node',
-      transform: accessors.translateToPosition0,
+      transform: opts.vertical ? 
+        accessors.translateToPosition0 : accessors.flipTranslateToPosition0,
       id: accessors.id
     })
     .on('click', function notifyThatNodeWasSelected(d) {
@@ -62,14 +72,16 @@ function createQuadtreetree(opts) {
     // Transition nodes to their new positions.
     var updatees = renderedNodes.transition()
       .duration(quadtreetree.animationDuration)
-      .attr('transform', accessors.translateToPosition);
+      .attr('transform', opts.vertical ? 
+        accessors.translateToPosition : accessors.flipTranslateToPosition);
 
     updatees.select('circle').attr('r', 12);
 
     // Transition exiting nodes to their previous positions.
     var exiters = renderedNodes.exit().transition()
       .duration(quadtreetree.animationDuration)
-      .attr('transform', accessors.translateToPosition0)
+      .attr('transform', opts.vertical ?
+        accessors.translateToPosition0 : accessors.flipTranslateToPosition0)
       .remove();
 
     exiters.select('circle').attr('r', 1e-6);
