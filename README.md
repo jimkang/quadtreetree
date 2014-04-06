@@ -1,7 +1,7 @@
 quadtreetree
 ============
 
-This is a browser module that renders a D3 [quadtree](https://github.com/mbostock/d3/wiki/Quadtree-Geom)'s nodes in [tree layout](https://github.com/mbostock/d3/wiki/Tree-Layout).
+This is a browser module that renders a D3 [quadtree](https://github.com/mbostock/d3/wiki/Quadtree-Geom)'s nodes in a [tree layout](https://github.com/mbostock/d3/wiki/Tree-Layout).
 
 Requirements
 ------------
@@ -56,7 +56,7 @@ This event is dispatched when new nodes are rendered as dots in the tree layout.
 Example
 -------
 
-See `example/index.html`. [There's a live version of it here.](http://jimkang.com/quadtreetree/example/).
+See `example/index.html`. [There's a live version of it here.](http://jimkang.com/quadtreetree/example/)
 
 License
 -------

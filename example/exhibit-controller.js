@@ -2,7 +2,7 @@ function exhibitController() {
   var points = [];
   var currentPointRange = [0, 50];
   var numberOfPointsToAddAtATime = 50;
-  var pointAddingInterval = 4000;
+  var pointAddingInterval = 8000;
   var maxNumberOfPoints = 1000;
   var padding = 8;
   var detailsBox = d3.select('.details-box');
