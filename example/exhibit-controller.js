@@ -40,9 +40,9 @@ function exhibitController() {
   }
 
   points = d3.range(maxNumberOfPoints).map(createPointRandomly);
-  quadtree = exampleQuadtree(boardWidth, boardHeight, pointsInRange());
+  var quadtree = exampleQuadtree(boardWidth, boardHeight, pointsInRange());
 
-  quadtreetree = createQuadtreetree({
+  var quadtreetree = createQuadtreetree({
     rootSelector: '#treeroot',
     vertical: true
   });
