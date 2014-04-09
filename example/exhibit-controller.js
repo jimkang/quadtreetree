@@ -88,7 +88,7 @@ function exhibitController() {
     currentPointRange[0] = currentPointRange[1];
     currentPointRange[1] = newUpperBound;
     pointsInRange().forEach(quadtree.add);
-    quadtree.setLabels();
+    quadtree.updateNodes();
     quadtreetree.update(quadtree);
   },
   pointAddingInterval);
