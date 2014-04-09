@@ -1,6 +1,6 @@
 {
   "name": "quadtreetree",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Draws a D3 quadtree's internal tree to a layout tree.",
   "main": "quadtreetree.js",
   "directories": {
