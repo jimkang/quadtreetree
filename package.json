@@ -1,6 +1,6 @@
 {
   "name": "quadtreetree",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Draws a D3 quadtree's internal tree to a layout tree.",
   "main": "quadtreetree.js",
   "directories": {
@@ -30,6 +30,6 @@
     "svgcamera": "0.2.0",
     "quadtreenodereport": "0.1.1",
     "lodash": "2.4.1",
-    "quadtreelabeler": "~0.2.1"
+    "quadtreelabeler": "~0.3.2"
   }
 }
