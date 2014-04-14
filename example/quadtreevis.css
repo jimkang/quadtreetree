@@ -40,7 +40,6 @@ svg {
   fill: rgb(204, 0, 255);
 }
 
-
 #quadtreetree {
   background-color: #444;
   border-radius: 4px;
@@ -50,6 +49,15 @@ svg {
   cursor: pointer;
   fill-opacity: 0.8;
   stroke: none;
+  fill: orange;
+}
+
+#quadtreetree .node.leaf circle {
+  fill: red;
+}
+
+#quadtreetree .node.ghost circle {
+  fill: white;
 }
 
 #quadtreetree .new.node circle {
