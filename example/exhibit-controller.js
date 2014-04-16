@@ -44,7 +44,8 @@ function exhibitController() {
 
   var quadtreetree = createQuadtreetree({
     rootSelector: '#treeroot',
-    vertical: true
+    vertical: true,
+    prefix: 'prefix'
   });
 
   var camera = createCamera('#quadtreetree', '#treeroot', [0.025, 2]);
