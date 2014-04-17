@@ -17,6 +17,12 @@ function createQuadtreetree(opts) {
     opts.vertical = true;
   }
 
+  var prefix = 'tree-';
+  if (opts.prefix) {
+    prefix = (opts.prefix + '-' + prefix);
+  }
+  var labeler = createQuadtreeLabeler(prefix);  
+
   function normalizeYToFixedDepth(d) {
     d.y = d.depth * 400;
     return d;
@@ -42,7 +48,7 @@ function createQuadtreetree(opts) {
   var tree = d3.layout.tree().nodeSize([32, 32]);
 
   function update(quadtree) {
-    var layoutTree = quadtreeToLayoutTree(quadtree, opts.prefix);
+    var layoutTree = quadtreeToLayoutTree(quadtree, labeler);
     // Compute the positions for nodes and links.
     var nodes = tree.nodes(layoutTree).reverse();
     nodes.forEach(normalizeYToFixedDepth);
@@ -127,6 +133,7 @@ function createQuadtreetree(opts) {
 
   return {
     update: update,
-    selectElementExclusively: oneAtATimeSelector.selectElementWithId
+    selectElementExclusively: oneAtATimeSelector.selectElementWithId,
+    labeler: labeler
   };
 }

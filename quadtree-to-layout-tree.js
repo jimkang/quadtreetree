@@ -1,11 +1,9 @@
-function quadtreeToLayoutTree(quadtree, labelPrefix) {
+function quadtreeToLayoutTree(quadtree, labeler) {
   var idmaker = createIdmaker();
 
-  var prefix = 'tree-';
-  if (labelPrefix) {
-    prefix = (labelPrefix + '-' + prefix);
+  if (!labeler) {
+    labeler = createQuadtreeLabeler('tree-');
   }
-  var labeler = createQuadtreeLabeler(prefix);
 
   var layoutNode = {
     id: labeler.elementIdForNode(quadtree),
@@ -27,7 +25,7 @@ function quadtreeToLayoutTree(quadtree, labelPrefix) {
       };
     }
 
-    layoutNode.children.push(quadtreeToLayoutTree(child, labelPrefix));
+    layoutNode.children.push(quadtreeToLayoutTree(child, labeler));
   }
 
   return layoutNode;
