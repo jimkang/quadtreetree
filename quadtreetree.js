@@ -2,6 +2,8 @@
 // 
 // {
 //   rootSelector: a selector for a <g> under which to render the tree
+//   prefix: (Optional) a prefix to use to create labels for the elements in the 
+//   tree.
 // }
 
 function createQuadtreetree(opts) {
@@ -10,10 +12,6 @@ function createQuadtreetree(opts) {
   });
 
   var oneAtATimeSelector = createOneAt('selected');
-
-  function prefixedId(d) {
-    return opts.prefix ? opts.prefix + '-' + d.id : d.id;
-  }
 
   if (opts.vertical === undefined) {
     opts.vertical = true;
@@ -44,7 +42,7 @@ function createQuadtreetree(opts) {
   var tree = d3.layout.tree().nodeSize([32, 32]);
 
   function update(quadtree) {
-    var layoutTree = quadtreeToLayoutTree(quadtree);
+    var layoutTree = quadtreeToLayoutTree(quadtree, opts.prefix);
     // Compute the positions for nodes and links.
     var nodes = tree.nodes(layoutTree).reverse();
     nodes.forEach(normalizeYToFixedDepth);
@@ -56,19 +54,19 @@ function createQuadtreetree(opts) {
 
   function syncDOMToNodes(nodes) {
     var renderedNodes = root.selectAll('g.node')
-      .data(nodes, prefixedId)
-      .attr('id', prefixedId);
+      .data(nodes, accessors.id)
+      .attr('id', accessors.id);
 
     // Enter any new nodes at their previous positions.
     var entrants = renderedNodes.enter().append('g').attr({
       transform: opts.vertical ? 
         accessors.translateToPosition0 : accessors.flipTranslateToPosition0,
-      id: prefixedId
+      id: accessors.id
     })
     .classed('node', true)
     .classed('new', true)
     .on('click', function notifyThatNodeWasSelected(d) {
-      oneAtATimeSelector.selectElementWithId(prefixedId(d));
+      oneAtATimeSelector.selectElementWithId(accessors.id(d));
       sendEvent('quadtreetree-nodeSelected', d);
     });
 
