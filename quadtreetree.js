@@ -111,7 +111,10 @@ function createQuadtreetree(opts) {
     // Stash the old positions for future transitions.
     nodes.forEach(savePositionToPrevious);
 
-    sendEvent('quadtreetree-dotsEntered', entrants);
+    sendEvent('quadtreetree-dotsEntered', {
+      emitterName: opts.name,
+      entrants: entrants
+    });
   }
 
   function syncDOMToLinks(links) {

@@ -53,7 +53,7 @@ function exhibitController() {
   document.addEventListener('quadtreetree-dotsEntered', zoomToDots);
 
   function zoomToDots(event) {
-    var dots = event.detail;
+    var dots = event.detail.entrants;
     // Pan to one of the new dots.
     setTimeout(function pan() {
       camera.panToElement(dots, 750);
