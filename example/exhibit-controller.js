@@ -45,7 +45,7 @@ function exhibitController() {
   var quadtreetree = createQuadtreetree({
     rootSelector: '#treeroot',
     vertical: true,
-    prefix: 'prefix'
+    name: 'prefix'
   });
 
   var camera = createCamera('#quadtreetree', '#treeroot', [0.025, 2]);
@@ -64,7 +64,7 @@ function exhibitController() {
   document.addEventListener('quadtreetree-nodeSelected', reportSelectedNode);
 
   function reportSelectedNode(e) {
-    var report = quadtreeNodeReport(e.detail.sourceNode);
+    var report = quadtreeNodeReport(e.detail.layoutNode.sourceNode);
     report = dropQuadtreetreeSpecifics(report);
     detailsBox.text(JSON.stringify(report, null, '  '));
   }
